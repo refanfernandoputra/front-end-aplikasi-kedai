@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux';
 import * as getMenusActions from '../_actions/menus'
 import * as getTransactionsActions from '../_actions/Transactions'
@@ -15,6 +15,7 @@ class Cart extends Component {
             objItemMenu: [],
             isModalConfirmVisible: false,
         }
+
     }
 
     toggleModalConfirm = () => {
@@ -31,6 +32,7 @@ class Cart extends Component {
         //     objjItemMenu = objItemMenu.push({e})
         // })
         console.log('state lokal ' + itemMenu)
+
     }
 
     addQty(itemMenu, id) {
@@ -39,7 +41,7 @@ class Cart extends Component {
         for (let i = 0; i < length; i++) {
             if (obj[i].id == id) {
                 this.state.objItemMenu[i].qty += 1
-                return this.setState({ objItemMenu:obj })
+                return this.setState({ objItemMenu: obj })
             }
         }
     }
@@ -49,17 +51,17 @@ class Cart extends Component {
         const obj = this.state.objItemMenu
         const length = obj.length
         for (let i = 0; i < length; i++) {
-                if (obj[i].id == id) {
-                    const newQty = obj[i].qty 
-                    if (newQty > 1) {
-                        this.state.objItemMenu[i].qty -= 1
-                        return this.setState({ objItemMenu:obj })
-                    } else {
-                        this.destroy(id)
-                        return this.setState({ objItemMenu:obj })
-                    }
+            if (obj[i].id == id) {
+                const newQty = obj[i].qty
+                if (newQty > 1) {
+                    this.state.objItemMenu[i].qty -= 1
+                    return this.setState({ objItemMenu: obj })
+                } else {
+                    this.destroy(id)
+                    return this.setState({ objItemMenu: obj })
                 }
-            } 
+            }
+        }
     }
 
     destroy = (id) => {
@@ -76,9 +78,17 @@ class Cart extends Component {
 
     }
 
+    _signInPayment = async () => {
+        try {
+            await AsyncStorage.setItem('Payment', 'true');
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+    }
 
     render() {
-        
+
         const { navigation } = this.props
         let numTable = navigation.getParam('numTable', 0)
         const itemMenu = this.props.itemMenus.data
@@ -88,9 +98,9 @@ class Cart extends Component {
         const menu = this.props.menus.data
         let countPrice = 0
         console.log(itemMenu.length)
+        this.props.navigation.state.params.onNavigateBack(this.state.objItemMenu)//back screen and render
         return (
             <View style={styles.container}>
-                {/* {console.log(this.state.objItemMenu[0].numTable)} */}
                 <ScrollView style={{ flex: 1 }}>
                     <View style={styles.containerMenus}>
                         {itemMenu.map((e, i) => {
@@ -187,7 +197,9 @@ class Cart extends Component {
                                 <Text style={_styles.textButtonConfirm}>Tidak</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={_styles.buttonConfirm}
-                                onPress={() => { this.props.insertTransactions(countPrice,numTable), this.toggleModalConfirm(),this.props.navigation.navigate('toPayment',{numTable}) }}
+                                onPress={() => {  this._signInPayment(),this.props.insertTransactions(countPrice,numTable),this.toggleModalConfirm(),this.props.navigation.navigate('toPayment',{numTable}) 
+                           
+                            }}
                             >
                                 <Text style={_styles.textButtonConfirm}>Iya</Text>
                             </TouchableOpacity>
@@ -211,7 +223,7 @@ const mapStateToProps = state => {
 const mapDispatchtoProps = dispatch => {
     return {
         getMenus: () => dispatch(getMenusActions.getMenus()),
-        insertTransactions : (countPrice,numTable) => dispatch(getTransactionsActions.insertTransactions(countPrice,numTable))
+        insertTransactions: (countPrice, numTable) => dispatch(getTransactionsActions.insertTransactions(countPrice, numTable))
     }
 }
 

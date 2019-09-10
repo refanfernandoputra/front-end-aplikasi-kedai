@@ -1,7 +1,7 @@
 import * as type from '../_redux/types';
 const initialState = {
     data: [],
-    isLoading: false
+    isLoading: true
   }
   
 export default function TRANSACTIONS (state = initialState, action){
@@ -10,7 +10,7 @@ export default function TRANSACTIONS (state = initialState, action){
         return {
           ...state,
           data: 'data kosong',
-          isLoading: false
+          isLoading: true
         } 
         case type.iNSERT_TRANSACTIONS_FULFILLED:
         return {
@@ -21,7 +21,7 @@ export default function TRANSACTIONS (state = initialState, action){
         case type.iNSERT_TRANSACTIONS_REJECTED:
         return {
           ...state,
-          data: action.payload.data,
+          data: 'Gagal! Periksa jaringan anda',
           isLoading: false
         }  
         

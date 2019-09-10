@@ -1,7 +1,7 @@
 import * as type from '../_redux/types';
 const initialState = {
     data: ['data kosong'],
-    isLoading: false
+    isLoading: true
   }
   
 export default function menus (state = initialState, action){
@@ -10,7 +10,7 @@ export default function menus (state = initialState, action){
         return {
           ...state,
           data: 'data kosong',
-          isLoading: false
+          isLoading: true
         } 
         case type.GET_LIST_MENU_FULFILLED:
         return {
@@ -21,7 +21,7 @@ export default function menus (state = initialState, action){
         case type.GET_LIST_MENU_REJECTED:
         return {
           ...state,
-          data: action.payload.data,
+          data: 'Periksa jaringan anda',
           isLoading: false
         }  
         

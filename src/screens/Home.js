@@ -6,7 +6,7 @@ import * as getMenusActions from '../_actions/menus'
 import Modal from "react-native-modal";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from "./Styles"
-import { NavigationEvents } from 'react-navigation';
+import Spinner from "./Spinner"
 
 
 YellowBox.ignoreWarnings([
@@ -27,14 +27,14 @@ class Home extends Component {
             isModalConfirmVisible: false,
             showComponent: false,
             obj: [],
-            getQty : 0,
-            getPrice : 0
+            getQty: 0,
+            getPrice: 0
         }
-
+        this.handleOnNavigateBack = this.handleOnNavigateBack.bind(this)
     }
 
 
-    getMenuItem(itemMenu, id, index, price,numTable) {
+    getMenuItem(itemMenu, id, index, price, numTable) {
         const obj = this.state.obj
         const length = obj.length
         const find = 0
@@ -43,20 +43,20 @@ class Home extends Component {
                 if (obj[i].id == id) {
                     const newQty = obj[i].qty + 1
                     obj.splice(i, 1)
-                    const counter = obj.push({ name: itemMenu, id: id, qty: newQty, numTable:numTable })
+                    const counter = obj.push({ name: itemMenu, id: id, qty: newQty, numTable: numTable })
                     this.setState({ counter })
 
                 } else if (i == length - 1) {
-                    const counter = obj.push({ name: itemMenu, id: id, qty: 1,numTable:numTable })
+                    const counter = obj.push({ name: itemMenu, id: id, qty: 1, numTable: numTable })
                     this.setState({ counter })
                 }
             }
         } else {
-            
-            const counter = obj.push({ name: itemMenu, id: id, qty: 1,numTable:numTable })
+
+            const counter = obj.push({ name: itemMenu, id: id, qty: 1, numTable: numTable })
             this.setState({ counter })
             this.setState({ showComponent: !this.state.showComponent });
-            
+
         }
         console.log(this.state.obj)
     }
@@ -82,11 +82,16 @@ class Home extends Component {
         }
     }
     componentDidMount() {
-
         this.props.getCategories(),
             this.props.getMenus()
 
         //axios.get('http://localhost:5000/api/v1/categories').then(result=>console.log(result)).catch(r=>console.log(r))   
+    }
+
+    handleOnNavigateBack = (data) => {
+        this.setState({
+            obj: data
+        })
     }
 
     renderItem = ({ item, index }) => {
@@ -102,7 +107,7 @@ class Home extends Component {
     render() {
         let getQty = 0
         let getPrice = 0
-        
+
         const _itemMenus = this.props.itemMenus.data
 
         const sendItemMenu = _itemMenus.length <= 0 ? this.props.sendItemMenus(this.state.obj) : null
@@ -122,118 +127,126 @@ class Home extends Component {
         const { navigation } = this.props
         const numTable = navigation.getParam('noTable', 0)
         const numColumns = 3
-        return (
-            <View style={stylesHome.container}>   
-            <View style={{alignItems:'center'}}>
-                <Text style={{fontSize:20,fontWeight:'bold'}}>Meja {numTable}</Text>
-            </View>
-                <View style={stylesHome.containerCategorie}>
-                    {this.props.categories.data.map((item, key) => (
-                        <TouchableOpacity style={this.state.nav == item.name ? stylesHome.backgroundAktif : stylesHome.menu}
-                            onPress={() => {
-                                this.setState({
-                                    nav: item.name
-                                })
-                            }} key={key} >
-                            <Text>{key == 1 ? <Ionicons name="md-wine" size={20} color={'green'} /> : <Ionicons name="md-pizza" size={20} color={'green'} />} {item.name} </Text>
-                        </TouchableOpacity>
-
-
-                    )
-                    )}
-                </View>
-                <View style={stylesHome.content} >
-                    <View style={styles.menus} >
-                        <View style={{ flex: 1 }}>
-
-                            {/* area FlatList menu */}
-                                                        
-                            <ScrollView style= {{flex: 1}}>
-                                <View style={{flex:1, flexDirection:'row', flexWrap:'wrap', alignItems:'center',justifyContent:'center'}}>
-                                {menu.map((item, index) => {
-                                    if (item.categories_name == this.state.nav) {
-
-                                        return (
-                                            <View
-                                                style={styles.itemMenu}
-                                                key={index}
-                                            // onPress={() => this.getMenuItem(item.name, item.id, index)}
-                                            >
-                                                <TouchableOpacity style={styles.imageBg} onPress={() => this.getMenuItem(item.name, item.id, index, item.price,numTable)} >
-                                                    <View style={styles.containerImageMenu}>
-                                                        <Image source={{ uri: (item.image) }} style={styles.imageMenu} />
-                                                    </View>
-                                                    <View style={styles.containerTextContentMenu}>
-                                                        <View style={styles.textContentMenu}>
-                                                            <Text style={styles.itemTextMenu}>Rp. {item.price} {'\n'}{item.name}</Text>
-                                                        </View>
-
-                                                    </View>
-                                                    {/* equal qty */}
-                                                    {this.state.obj.map((e, i) => {
-                                                        if (e.name == undefined) {
-                                                            return null
-                                                        } else if (item.id == e.id) {
-                                                            
-                                                            return (
-                                                                <View key={i} style={styles.containerQty}>
-                                                                    <Text style={styles.qty}>{e.qty} </Text>
-                                                                </View>
-                                                            )
-                                                        }
-                                                    })}
-                                                </TouchableOpacity>
-                                            </View>
-                                        );
-                                    } else {
-                                        null
-                                    }
-                                    
-                                }
-                                )}
-                                </View>
-                            </ScrollView>
-
-                            {/* akhir area */}
-
-                        </View>
+        if (this.props.menus.isLoading === true || this.props.categories.isLoading === true) {
+            return (
+                <Spinner/>
+            )
+        } else {
+            return (
+                <View style={stylesHome.container}>
+                    <View style={{ alignItems: 'center' }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Meja {numTable}</Text>
                     </View>
-                    {_itemMenus.length == 0 ? this.state.showComponent == false :
-                        this.state.showComponent == true || _itemMenus.length > 0 ?
+                    <View style={stylesHome.containerCategorie}>
+                        {this.props.categories.data.map((item, key) => (
+                            <TouchableOpacity style={this.state.nav == item.name ? stylesHome.backgroundAktif : stylesHome.menu}
+                                onPress={() => {
+                                    this.setState({
+                                        nav: item.name
+                                    })
+                                }} key={key} >
+                                <Text>{key == 1 ? <Ionicons name="md-wine" size={20} color={'green'} /> : <Ionicons name="md-pizza" size={20} color={'green'} />} {item.name} </Text>
+                            </TouchableOpacity>
 
-                            <View style={{backgroundColor: 'green', height: 40, margin: 10, flex: 0.20 }}>
-                                <TouchableOpacity style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-                                    //onPress={() => { this.props.navigation.navigate('Card') }}
-                                    onPress={() =>
-                                        [sendItemMenu,
-                                            this.props.navigation.navigate('Cart',{numTable})]
-                                    }>
-                                        {this.state.obj.map((e,i)=>{
-                                            {getQty += e.qty}
-                                            {menu.map((element,index) => {
-                                                if (e.id == element.id){
-                                                    getPrice += element.price * e.qty
-                                                }
-                                            })}
-                                        })}
-                                        
-                                    <Ionicons name='md-basket' size={15} color='white' > 
-                                    <Text style={{ color: 'white' }} > {getQty} item | Rp.{getPrice}</Text>
-                                    </Ionicons>
-                                      
-                                </TouchableOpacity>
+
+                        )
+                        )}
+                    </View>
+                    <View style={stylesHome.content} >
+                        <View style={styles.menus} >
+                            <View style={{ flex: 1 }}>
+
+                                {/* area FlatList menu */}
+
+                                <ScrollView style={{ flex: 1 }}>
+                                    <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
+                                        {menu.map((item, index) => {
+                                            if (item.categories_name == this.state.nav) {
+
+                                                return (
+                                                    <View
+                                                        style={styles.itemMenu}
+                                                        key={index}
+                                                    // onPress={() => this.getMenuItem(item.name, item.id, index)}
+                                                    >
+                                                        <TouchableOpacity style={styles.imageBg} onPress={() => this.getMenuItem(item.name, item.id, index, item.price, numTable)} >
+                                                            <View style={styles.containerImageMenu}>
+                                                                <Image source={{ uri: (item.image) }} style={styles.imageMenu} />
+                                                            </View>
+                                                            <View style={styles.containerTextContentMenu}>
+                                                                <View style={styles.textContentMenu}>
+                                                                    <Text style={styles.itemTextMenu}>Rp. {item.price} {'\n'}{item.name}</Text>
+                                                                </View>
+
+                                                            </View>
+                                                            {/* equal qty */}
+                                                            {this.state.obj.map((e, i) => {
+                                                                if (e.name == undefined) {
+                                                                    return null
+                                                                } else if (item.id == e.id) {
+
+                                                                    return (
+                                                                        <View key={i} style={styles.containerQty}>
+                                                                            <Text style={styles.qty}>{e.qty} </Text>
+                                                                        </View>
+                                                                    )
+                                                                }
+                                                            })}
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                );
+                                            } else {
+                                                null
+                                            }
+
+                                        }
+                                        )}
+                                    </View>
+                                </ScrollView>
+
+                                {/* akhir area */}
+
                             </View>
-                            : null
-                    }
-                    
+                        </View>
+                        {_itemMenus.length == 0 ? this.state.showComponent == false :
+                            this.state.showComponent == true || _itemMenus.length > 0 ?
 
-                    {/* footer */}
+                                <View style={{ backgroundColor: 'green', height: 40, margin: 10, flex: 0.20 }}>
+                                    <TouchableOpacity style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                                        //onPress={() => { this.props.navigation.navigate('Card') }}
+                                        onPress={() =>
+                                            [sendItemMenu,
+                                                this.props.navigation.navigate('Cart', { numTable, onNavigateBack: this.handleOnNavigateBack })]
+                                        }>
+                                        {this.state.obj.map((e, i) => {
+                                            { getQty += e.qty }
+                                            {
+                                                menu.map((element, index) => {
+                                                    if (e.id == element.id) {
+                                                        getPrice += element.price * e.qty
+                                                    }
+                                                })
+                                            }
+                                        })}
 
-                    {/* end footer */}
+                                        <Ionicons name='md-basket' size={15} color='white' >
+                                            <Text style={{ color: 'white' }} > {getQty} item | Rp.{getPrice}</Text>
+                                        </Ionicons>
 
+                                    </TouchableOpacity>
+                                </View>
+                                : null
+                        }
+
+
+                        {/* footer */}
+
+                        {/* end footer */}
+
+                    </View>
                 </View>
-            </View>
-        )
+            )
+        }
     }
 }
 

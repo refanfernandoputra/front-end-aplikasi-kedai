@@ -1,7 +1,7 @@
 import * as type from '../_redux/types';
 const initialState = {
     data: ['data kosong'],
-    isLoading: false
+    isLoading: true
   }
   
 export default function categories (state = initialState, action){
@@ -10,7 +10,7 @@ export default function categories (state = initialState, action){
         return {
           ...state,
           data: 'data kosong',
-          isLoading: false
+          isLoading: true
         } 
         case type.GET_CATEGORIES_FULFILLED:
         return {
@@ -21,7 +21,7 @@ export default function categories (state = initialState, action){
         case type.GET_CATEGORIES_REJECTED:
         return {
           ...state,
-          data: action.payload.data,
+          data: 'Data Gagal Dimuat',
           isLoading: false
         }  
       default:

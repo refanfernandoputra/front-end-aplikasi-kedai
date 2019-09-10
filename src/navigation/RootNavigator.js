@@ -4,6 +4,7 @@ import Login from '../screens/Login'
 import Payment from '../screens/Payment'
 import Cart from '../screens/Cart'
 import Home from '../screens/Home'
+import Auth from '../screens/Auth'
 
 const MainNavigator = createStackNavigator({
     Main : {
@@ -25,12 +26,6 @@ const MainNavigator = createStackNavigator({
             
         }
     },
-    // toPayment:{
-    //     screen:Payment,
-    //     navigationOptions:{
-    //         header:null
-    //     }
-    // }
 })
 
 const _Payment = createStackNavigator({
