@@ -161,7 +161,7 @@ class Home extends Component {
                                 <ScrollView style={{ flex: 1 }}>
                                     <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
                                         {menu.map((item, index) => {
-                                            if (item.categories_name == this.state.nav) {
+                                            if (item.categories.name == this.state.nav) {
 
                                                 return (
                                                     <View
