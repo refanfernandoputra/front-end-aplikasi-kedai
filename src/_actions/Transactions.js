@@ -13,7 +13,7 @@ export const insertTransactions = (countPrice,numTable) => ({
             data: {
                 "tableNumber":numTable,
                 "finishedTime":0,
-                "subTotal":countPrice,
+                "subtotal":countPrice,
                 "discount":0,
                 "serviceCharge":0,
                 "tax":0,

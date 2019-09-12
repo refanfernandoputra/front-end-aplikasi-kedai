@@ -3,8 +3,8 @@ import { createStackNavigator, createAppContainer,createSwitchNavigator } from '
 import Login from '../screens/Login'
 import Payment from '../screens/Payment'
 import Cart from '../screens/Cart'
+import Ordered from '../screens/Ordered'
 import Home from '../screens/Home'
-import Auth from '../screens/Auth'
 
 const MainNavigator = createStackNavigator({
     Main : {
@@ -37,9 +37,20 @@ const _Payment = createStackNavigator({
     }
 })
 
+
+const _Ordered = createStackNavigator({
+    index:{
+        screen:Ordered,
+        navigationOptions:{
+            header:null
+        }
+    }
+})
+
 const SwitchComponent = createAppContainer(createSwitchNavigator({
     _Main : MainNavigator,
-    toPayment: _Payment
+    toPayment: _Payment,
+    order:_Ordered
 }))
 
 

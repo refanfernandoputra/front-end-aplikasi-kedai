@@ -1,24 +1,24 @@
 import * as type from '../_redux/types';
 const initialState = {
     data: [],
-    isLoading: false
+    isLoading: true
   }
   
 export default function orders (state = initialState, action){
     switch (action.type) {
-      case type.iNSERT_ORDERS:
+      case type.SEND_ORDERS:
         return {
           ...state,
           data: 'data kosong',
-          isLoading: false
+          isLoading: true
         } 
-        case type.iNSERT_ORDERS_FULFILLED:
+        case type.SEND_ORDERS_FULFILLED:
         return {
           ...state,
           data: action.payload.data,
           isLoading: false
         }  
-        case type.iNSERT_ORDERS_REJECTED:
+        case type.SEND_ORDERS_REJECTED:
         return {
           ...state,
           data: action.payload.data,

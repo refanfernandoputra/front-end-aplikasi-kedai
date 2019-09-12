@@ -27,12 +27,6 @@ class Cart extends Component {
         const itemMenu = this.props.itemMenus.data
         let objItemMenu = this.state.objItemMenu
         this.setState({ objItemMenu: this.props.itemMenus.data })
-        console.log('props menu ' + this.props.itemMenus.data)
-        // itemMenu.map((e,i)=>{
-        //     objjItemMenu = objItemMenu.push({e})
-        // })
-        console.log('state lokal ' + itemMenu)
-
     }
 
     addQty(itemMenu, id) {
@@ -65,12 +59,9 @@ class Cart extends Component {
     }
 
     destroy = (id) => {
-        console.log('id masuk : ' + id)
         const getItemMenu = this.state.objItemMenu
-        console.log(getItemMenu.length)
         for (let i = 0; i < getItemMenu.length; i++) {
             if (getItemMenu[i].id == id) {
-                console.log('item yg akan dihapus ' + getItemMenu[i].id)
                 const objItemMenu = getItemMenu.splice(i, 1)
                 return this.setState({ objItemMenu: this.props.itemMenus.data })
             }
@@ -87,18 +78,23 @@ class Cart extends Component {
         }
     }
 
+    componentDidUpdate(){
+        this.props.navigation.state.params.onNavigateBack(this.state.objItemMenu)//back screen and render
+        
+    }
+
     render() {
 
         const { navigation } = this.props
         let numTable = navigation.getParam('numTable', 0)
         const itemMenu = this.props.itemMenus.data
         if (itemMenu.length <= 0) {
-            this.props.navigation.navigate('Home')
+            return(
+                this.props.navigation.navigate('Home')
+            )
         }
         const menu = this.props.menus.data
         let countPrice = 0
-        console.log(itemMenu.length)
-        this.props.navigation.state.params.onNavigateBack(this.state.objItemMenu)//back screen and render
         return (
             <View style={styles.container}>
                 <ScrollView style={{ flex: 1 }}>
@@ -174,7 +170,7 @@ class Cart extends Component {
                 </ScrollView>
 
                 <TouchableOpacity style={styles.footer} onPress={() => this.toggleModalConfirm()}>
-                    <Text style={{ color: 'white' }}>Konfirmasi</Text>
+                    <Text style={{ color: 'white' }}>Order</Text>
                 </TouchableOpacity>
 
 
@@ -184,7 +180,7 @@ class Cart extends Component {
                         <View style={_styles.headerModalConfirm}>
                             <View style={_styles.boxHeaderModalConfirm}>
                                 <Text style={_styles.textHeaderConfirm}>
-                                    Konfirmasi Pesanan
+                                    Order Pesanan ini
                                 </Text>
                                 <Text style={_styles.textHeaderConfirm}>
                                     Apakah anda yakin?
@@ -197,7 +193,9 @@ class Cart extends Component {
                                 <Text style={_styles.textButtonConfirm}>Tidak</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={_styles.buttonConfirm}
-                                onPress={() => {  this._signInPayment(),this.props.insertTransactions(countPrice,numTable),this.toggleModalConfirm(),this.props.navigation.navigate('toPayment',{numTable}) 
+                                // onPress={() => {this.props.insertTransactions(countPrice,numTable),this.toggleModalConfirm(),this.props.navigation.navigate('toPayment',{numTable}) 
+                                
+                                onPress={() => {this.props.insertTransactions(countPrice,numTable),this.toggleModalConfirm(),this.props.navigation.navigate('order') 
                            
                             }}
                             >

@@ -33,31 +33,50 @@ class Home extends Component {
         this.handleOnNavigateBack = this.handleOnNavigateBack.bind(this)
     }
 
-
     getMenuItem(itemMenu, id, index, price, numTable) {
         const obj = this.state.obj
         const length = obj.length
-        const find = 0
         if (obj.length > 0) {
             for (let i = 0; i < length; i++) {
                 if (obj[i].id == id) {
-                    const newQty = obj[i].qty + 1
-                    obj.splice(i, 1)
-                    const counter = obj.push({ name: itemMenu, id: id, qty: newQty, numTable: numTable })
-                    this.setState({ counter })
-
+                    this.state.obj[i].qty += 1
+                    return this.setState({ obj: obj })
                 } else if (i == length - 1) {
-                    const counter = obj.push({ name: itemMenu, id: id, qty: 1, numTable: numTable })
+                    const counter = obj.push({ name: itemMenu, id: id, qty: 1, numTable: numTable, price:price, status:'WAITING' })
                     this.setState({ counter })
                 }
             }
         } else {
-
-            const counter = obj.push({ name: itemMenu, id: id, qty: 1, numTable: numTable })
+            const counter = obj.push({ name: itemMenu, id: id, qty: 1, numTable: numTable, price:price, status:'WAITING' })
             this.setState({ counter })
             this.setState({ showComponent: !this.state.showComponent });
-
         }
+
+
+        // const obj = this.state.obj
+        // const length = obj.length
+        // const find = 0
+        // if (obj.length > 0) {
+        //     for (let i = 0; i < length; i++) {
+        //         if (obj[i].id == id) {
+        //             const newQty = obj[i].qty + 1
+        //             const newPrice = price * newQty
+        //             obj.splice(i, 1)
+        //             const counter = obj.push({ name: itemMenu, id: id, qty: newQty, numTable: numTable, price:newPrice })
+        //             this.setState({ counter })
+
+        //         } else if (i == length - 1) {
+        //             const counter = obj.push({ name: itemMenu, id: id, qty: 1, numTable: numTable, price:price })
+        //             this.setState({ counter })
+        //         }
+        //     }
+        // } else {
+
+        //     const counter = obj.push({ name: itemMenu, id: id, qty: 1, numTable: numTable, price:price })
+        //     this.setState({ counter })
+        //     this.setState({ showComponent: !this.state.showComponent });
+
+        // }
         console.log(this.state.obj)
     }
 
@@ -88,11 +107,16 @@ class Home extends Component {
         //axios.get('http://localhost:5000/api/v1/categories').then(result=>console.log(result)).catch(r=>console.log(r))   
     }
 
+    componentWillMount() {
+        this.props.itemMenus.data
+    }
+
     handleOnNavigateBack = (data) => {
         this.setState({
             obj: data
         })
     }
+    
 
     renderItem = ({ item, index }) => {
         return (
@@ -129,7 +153,7 @@ class Home extends Component {
         const numColumns = 3
         if (this.props.menus.isLoading === true || this.props.categories.isLoading === true) {
             return (
-                <Spinner/>
+                <Spinner />
             )
         } else {
             return (
@@ -216,7 +240,8 @@ class Home extends Component {
                                         //onPress={() => { this.props.navigation.navigate('Card') }}
                                         onPress={() =>
                                             [sendItemMenu,
-                                                this.props.navigation.navigate('Cart', { numTable, onNavigateBack: this.handleOnNavigateBack })]
+                                                this.props.navigation.navigate('Cart', { numTable, onNavigateBack: this.handleOnNavigateBack })
+                                            ]
                                         }>
                                         {this.state.obj.map((e, i) => {
                                             { getQty += e.qty }

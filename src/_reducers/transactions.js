@@ -4,7 +4,7 @@ const initialState = {
     isLoading: true
   }
   
-export default function TRANSACTIONS (state = initialState, action){
+export default function transactions (state = initialState, action){
     switch (action.type) {
       case type.iNSERT_TRANSACTIONS:
         return {
