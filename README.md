@@ -31,7 +31,7 @@ npm install nodemon -D
 npm start
 ```
 
-### CONTACT
+## CONTACT
 - Refan Fernando Putra
   - Wa/Telegram: +62 896 55704793
   - E-Mail: refanfernando@gmail.com
