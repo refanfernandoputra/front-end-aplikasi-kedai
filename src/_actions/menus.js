@@ -3,8 +3,8 @@ import axios from 'axios'
 
 export const getMenus = () => ({
       type: type.GET_LIST_MENU,
-      payload: axios.get('http://localhost:5000/api/v1/menus')
-      //payload: axios.get('http://sequelize-restorant.herokuapp.com/api/v1/menus')
+      //payload: axios.get('http://localhost:5000/api/v1/menus')
+      payload: axios.get('http://sequelize-restorant.herokuapp.com/api/v1/menus')
 })
 
 export const getItemMenus = () => {

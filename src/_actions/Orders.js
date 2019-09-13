@@ -8,7 +8,8 @@ export const sendOrder = (menuId,price,qty,transactionsId) => {
             payload: 
             axios({
                   method: 'post',
-                  url: 'http://localhost:5000/api/v1/Orders',
+                  //url: 'http://localhost:5000/api/v1/Orders',
+                  url: 'http://sequelize-restorant.herokuapp.com/api/v1/Orders',
                   headers: {},
                   data: {
                       "menuId":menuId,
