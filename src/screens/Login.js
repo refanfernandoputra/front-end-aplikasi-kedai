@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
     },
     containerMenu: {
         flex: 3,
-        alignItems: 'center'
+        alignItems: 'center',
+        elevation: 1,
     },
     img:{
         alignSelf:'center', 
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         alignItems: 'center',
         borderRadius:10,
-        padding:10
+        padding:10,
     },
     textInput:{
         marginTop:10,
@@ -80,7 +81,9 @@ const styles = StyleSheet.create({
         textAlign:'center',
         borderColor: 'gray', 
         borderWidth: 1,
-        marginBottom:10 ,
+        marginBottom:10,
+        shadowColor: "#ddd",
+        elevation: 1,
     },
     submit: {
         height:30,

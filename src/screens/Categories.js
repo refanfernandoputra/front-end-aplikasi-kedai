@@ -467,7 +467,7 @@ const styles = StyleSheet.create({
     },
     imageMenu: {
         flex: 1,
-        backgroundColor: 'green'
+        backgroundColor: 'red'
     },
     textContentMenu: {
         flex: 0.20,
@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
     },
 
     textStatusSentOrder: {
-        color: 'green',
+        color: 'red',
         fontSize: 20
     },
     itemOrder: {

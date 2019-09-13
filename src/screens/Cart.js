@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
         flex: 0.10,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'green',
+        backgroundColor: 'red',
         borderWidth: 1,
         borderColor: '#aaa',
         borderRadius: 10

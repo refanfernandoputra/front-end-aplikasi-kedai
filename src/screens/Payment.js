@@ -37,8 +37,6 @@ class Payment extends Component {
 
     render() {
         const itemMenus = this.props.itemMenus
-        const { navigation } = this.props
-        const numTable = navigation.getParam('numTable', 0)
         const time = this.state.timer
         const minute = this.state.minute
         const { box, textCenter, container, header, content, footer } = stylesPayment

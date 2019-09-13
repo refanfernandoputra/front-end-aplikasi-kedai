@@ -108,6 +108,9 @@ class Ordered extends Component {
 
 
     render() {
+        
+        const { navigation } = this.props
+        let numTable = navigation.getParam('numTable', 0)
         if (this.props.menus.isLoading === true || this.props.Transactions.isLoading === true) {
             return (
                 <Spinner />
@@ -204,7 +207,7 @@ class Ordered extends Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity style={_styles.buttonConfirm}
                                     onPress={() => {
-                                        this.props.insertTransactions(countPrice, numTable), this.toggleModalConfirm(), this.props.navigation.navigate('toPayment', { numTable })
+                                        this.props.insertTransactions(countPrice, numTable), this.toggleModalConfirm(), this.props.navigation.navigate('toPayment')
 
                                     }}
                                 >
@@ -262,7 +265,7 @@ const styles = StyleSheet.create({
         flex: 0.10,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'green',
+        backgroundColor: 'red',
         borderWidth: 1,
         borderColor: '#aaa',
         borderRadius: 10

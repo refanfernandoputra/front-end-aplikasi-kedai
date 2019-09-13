@@ -169,7 +169,7 @@ class Home extends Component {
                                         nav: item.name
                                     })
                                 }} key={key} >
-                                <Text>{key == 1 ? <Ionicons name="md-wine" size={20} color={'green'} /> : <Ionicons name="md-pizza" size={20} color={'green'} />} {item.name} </Text>
+                                <Text>{key == 1 ? <Ionicons name="md-wine" size={20} color={'red'} /> : <Ionicons name="md-pizza" size={20} color={'red'} />} {item.name} </Text>
                             </TouchableOpacity>
 
 
@@ -235,7 +235,7 @@ class Home extends Component {
                         {_itemMenus.length == 0 ? this.state.showComponent == false :
                             this.state.showComponent == true || _itemMenus.length > 0 ?
 
-                                <View style={{ backgroundColor: 'green', height: 40, margin: 10, flex: 0.20 }}>
+                                <View style={{ backgroundColor: 'red', height: 40, margin: 10, flex: 0.20 }}>
                                     <TouchableOpacity style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
                                         //onPress={() => { this.props.navigation.navigate('Card') }}
                                         onPress={() =>
@@ -314,7 +314,7 @@ const stylesHome = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-around',
         alignItems: 'center',
-        borderBottomColor: 'green',
+        borderBottomColor: 'red',
         borderBottomWidth: 1
     }
 })

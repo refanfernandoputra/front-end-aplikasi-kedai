@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     addItemMenu: {
         width: 70,
         height: 20,
-        backgroundColor: 'green',
+        backgroundColor: 'red',
         borderRadius: 10
     },
     buttonAdd: {
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     },
 
     textStatusSentOrder: {
-        color: 'green',
+        color: 'red',
         fontSize: 20
     },
     itemOrder: {
