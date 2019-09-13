@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { TextInput, View, StyleSheet, Text, TouchableOpacity, FlatList, ImageBackground, ScrollView, YellowBox, Image } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, YellowBox, Image } from 'react-native'
 import * as getCategoriesActions from '../_actions/categories'
 import * as getMenusActions from '../_actions/menus'
-import Modal from "react-native-modal";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from "./Styles"
 import Spinner from "./Spinner"

@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput,Image } from 'react-native'
-
+import AsyncStorage from '@react-native-community/async-storage'
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = { text: '' };
+    }
+
+    saveData(){
+        let noTable = this.state.text;
+        AsyncStorage.setItem('noTable', noTable);
     }
 
     konfirmasi = ()=>{
@@ -28,7 +33,7 @@ class Login extends Component {
                             value={this.state.text}
                         />
                         <TouchableOpacity style={styles.submit} onPress={()=>{
-                            {this.state.text =='' ?this.konfirmasi():this.props.navigation.navigate('Home',{noTable:this.state.text})}
+                            {this.state.text =='' ?this.konfirmasi():this.saveData(),this.props.navigation.navigate('Home',{noTable:this.state.text})}
                         }}>
                             <Text style={{ color: 'white' }}>Submit</Text>
                         </TouchableOpacity>

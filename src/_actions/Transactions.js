@@ -8,7 +8,8 @@ export const insertTransactions = (countPrice,numTable) => ({
         // axios.post('http://localhost:5000/api/v1/Transactions')
         axios({
             method: 'post',
-            url: 'http://localhost:5000/api/v1/Transactions',
+            //url: 'http://localhost:5000/api/v1/Transactions',
+            url: 'http://sequelize-restorant.herokuapp.com/api/v1/Transactions',
             headers: {},
             data: {
                 "tableNumber":numTable,
@@ -22,3 +23,9 @@ export const insertTransactions = (countPrice,numTable) => ({
             }
         })
 })
+export const sendTransactions = (data) => {
+    return {
+          type: type.iNSERT_TRANSACTIONS,
+          payload: data
+    }
+}

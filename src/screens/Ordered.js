@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, AsyncStorage } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { connect } from 'react-redux';
 import * as getMenusActions from '../_actions/menus'
 import * as getTransactionsActions from '../_actions/Transactions'
@@ -7,7 +7,7 @@ import Modal from "react-native-modal";
 import * as getOrdersActions from '../_actions/Orders'
 import _styles from './Styles'
 import Spinner from "./Spinner"
-import { NavigationEvents } from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage'
 
 
 class Ordered extends Component {
@@ -19,7 +19,7 @@ class Ordered extends Component {
             disabled: true,
             timeInsertOrder: 5,
             addOrderItem: 0,
-            buttonConfirm:false
+            buttonConfirm: false
         }
 
     }
@@ -29,14 +29,27 @@ class Ordered extends Component {
     };
 
     componentDidMount() {
+        AsyncStorage.removeItem('noTable');
         this.props.getMenus()
-        const itemMenu = this.props.itemMenus.data
-        let objItemMenu = this.state.objItemMenu
         this.setState({ objItemMenu: this.props.itemMenus.data })
-        this.interval = setInterval(
-            () => this.setState((x) => ({ timeInsertOrder: x.timeInsertOrder - 1 })),
-            1000
-        );
+        AsyncStorage.getItem('order', (error, result) => {
+            if (result) {
+                this.setState({ buttonConfirm: !this.state.buttonConfirm })
+            }else{
+                this.interval = setInterval(
+                    () => this.setState((x) => ({ timeInsertOrder: x.timeInsertOrder - 1 })),
+                    1000
+                );
+            }
+        })
+    }
+
+    saveDataToAsyn() {
+        const itemMenu = this.props.itemMenus
+        const transactions = this.props.Transactions
+        console.log(transactions)
+        AsyncStorage.setItem('order', JSON.stringify(itemMenu));
+        AsyncStorage.setItem('transactions', JSON.stringify(transactions));
     }
 
     componentDidUpdate() {
@@ -46,18 +59,24 @@ class Ordered extends Component {
     }
 
     insertOrders = () => {
-        const transactionsId = this.props.Transactions.data.Transactions.id
-        const itemMenu = this.props.itemMenus.data
-        const rowItem = this.state.addOrderItem
-        if (rowItem == itemMenu.length) {
-            clearInterval(this.interval)
+        if (this.props.menus.isLoading === true || this.props.Transactions.isLoading === true) {
+            return (
+                <Spinner />
+            )
         } else {
-            this.props.sendOrders(itemMenu[rowItem].id, itemMenu[rowItem].price, itemMenu[rowItem].qty, transactionsId)
-            itemMenu[rowItem].status = 'SENT'
-            this.state.addOrderItem += 1
-            this.setState({ timeInsertOrder: 5 })
-            if (rowItem == itemMenu.length - 1){
-                this.setState({ buttonConfirm : !this.state.buttonConfirm })
+            const transactionsId = this.props.Transactions.data.Transactions.id
+            const itemMenu = this.props.itemMenus.data
+            const rowItem = this.state.addOrderItem
+            if (rowItem == itemMenu.length) {
+                clearInterval(this.interval)
+            } else {
+                this.props.sendOrders(itemMenu[rowItem].id, itemMenu[rowItem].price, itemMenu[rowItem].qty, transactionsId)
+                itemMenu[rowItem].status = 'SENT'
+                this.state.addOrderItem += 1
+                this.setState({ timeInsertOrder: 5 })
+                if (rowItem == itemMenu.length - 1) {
+                    this.setState({ buttonConfirm: !this.state.buttonConfirm })
+                }
             }
         }
     }
@@ -95,6 +114,16 @@ class Ordered extends Component {
         }
     }
 
+    checkAsyn = () => {
+        AsyncStorage.getItem('order', (error, result) => {
+            if (result) {
+                null
+            }else{
+                this.saveDataToAsyn()
+            }
+        })
+    }
+
     destroy = (id) => {
         const getItemMenu = this.state.objItemMenu
         for (let i = 0; i < getItemMenu.length; i++) {
@@ -108,7 +137,8 @@ class Ordered extends Component {
 
 
     render() {
-        
+
+        this.checkAsyn()
         const { navigation } = this.props
         let numTable = navigation.getParam('numTable', 0)
         if (this.props.menus.isLoading === true || this.props.Transactions.isLoading === true) {
@@ -116,12 +146,10 @@ class Ordered extends Component {
                 <Spinner />
             )
         } else {
-            const orders = this.props.orders.data
-            const transactionsId = this.props.Transactions.data.Transactions.id
             const itemMenu = this.props.itemMenus.data
             const menu = this.props.menus.data
             let countPrice = 0
-            console.log(orders)
+            console.log(itemMenu)
             return (
                 <View style={styles.container}>
                     <ScrollView style={{ flex: 1 }}>
@@ -139,10 +167,10 @@ class Ordered extends Component {
                                                     <Text style={{ display: 'none' }}>{countPrice += item.price * e.qty}</Text>
                                                     <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'row' }}>
                                                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                            {e.status == 'WAITING' ? 
-                                                            <Text style={{ color: 'red' }}>{e.status} ..</Text>
-                                                            :
-                                                            <Text style={{ color: 'green' }}>{e.status}</Text>
+                                                            {e.status == 'WAITING' ?
+                                                                <Text style={{ color: 'red' }}>{e.status} ..</Text>
+                                                                :
+                                                                <Text style={{ color: 'green' }}>{e.status}</Text>
                                                             }
                                                         </View>
                                                     </View>
@@ -181,10 +209,10 @@ class Ordered extends Component {
                     </ScrollView>
 
                     {this.state.buttonConfirm == true ?
-                    <TouchableOpacity style={styles.footer} onPress={() => this.toggleModalConfirm()}>
-                        <Text style={{ color: 'white' }}>Konfirmasi</Text>
-                    </TouchableOpacity>
-                    :null}
+                        <TouchableOpacity style={styles.footer} onPress={() => this.toggleModalConfirm()}>
+                            <Text style={{ color: 'white' }}>Konfirmasi</Text>
+                        </TouchableOpacity>
+                        : null}
 
 
                     {/* modal Confirm*/}

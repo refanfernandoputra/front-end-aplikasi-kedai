@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, AsyncStorage } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { connect } from 'react-redux';
 import * as getMenusActions from '../_actions/menus'
 import * as getTransactionsActions from '../_actions/Transactions'
 import Modal from "react-native-modal";
 import _styles from './Styles'
-import { NavigationEvents } from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage'
 
 
 class Cart extends Component {
@@ -24,8 +24,6 @@ class Cart extends Component {
 
     componentDidMount() {
         this.props.getMenus()
-        const itemMenu = this.props.itemMenus.data
-        let objItemMenu = this.state.objItemMenu
         this.setState({ objItemMenu: this.props.itemMenus.data })
     }
 

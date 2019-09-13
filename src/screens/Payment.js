@@ -7,8 +7,8 @@ class Payment extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            timer: 60,
-            minute: 1
+            timer: 5,
+            minute: 0
         }
     }
 
@@ -24,8 +24,11 @@ class Payment extends Component {
             if (this.state.minute > 0) {
                 this.state.minute -= 1
                 this.state.timer = 60
-            } else {
+            } else {                
+                AsyncStorage.removeItem('order');
+                AsyncStorage.removeItem('transactions');
                 clearInterval(this.interval);
+                this.props.itemMenus.data = []
                 this.props.navigation.navigate('Main')
             }
         }
